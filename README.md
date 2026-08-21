@@ -82,7 +82,6 @@ cat flag.txt
 
 ### 4. Retrospective & Security Patch (배운 점, 실수, 보안 대책)
 
-*★ BoB 자소서/면접 시 기술적 깊이와 성찰 태도를 증명하는 가장 중요한 파트입니다.*
 
 - **실수했던 부분 및 Key Takeaway:**
     - *(예시 1)* x86-64 환경에서 Stack Alignment(16바이트 정렬) 미준수로 인한 Crash 문제를 확인하고 `ret` 가젯 추가 필요성을 배움.
