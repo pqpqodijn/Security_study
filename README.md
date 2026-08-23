@@ -89,3 +89,14 @@ cat flag.txt
 - **보안 대책 (Security Remediation):**
     - **[코드 개선]** `read(0, buf, sizeof(buf) - 1)`로 입력 크기를 제한하여 오버플로우 근본 차단.
     - **[컴파일/설정 적용]** `fstack-protector-all` (Canary) 및 PIE 활성화, 주요 비밀번호의 하드코딩 금지.
+ 
+
+
+
+
+
+
++
+echo "source /opt/pwndbg/gdbinit.py" >> ~/.gdbinit
+echo "set print symbol-filename on" >> ~/.gdbinit
+echo "set print asm-demangle on" >> ~/.gdbinit
