@@ -2,7 +2,7 @@
 
 **flag파일을 읽어서(syscall,sysenter, int 사용불가) 출력하는 shellcode 작성해서 입력하는 문제**
 
-논리 
+-논리 
 1. /challenge/syscall-smuggler 여기에 syscall이 있다면 주소를 이용해 사용하기 -> syscall이 안보여서 못함
 2. marker라는 공간에다가 임시로 작성해보고 이를 수정해봄 -> 실시간으로 수정가능
 3. 수정가능하니 syscall(0f05) + ret(c3)으로 수정해보기 -> 가능함(ret은 syscall만 작동후 다시 돌아오기 위한 장치)
