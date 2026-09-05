@@ -103,7 +103,7 @@ echo "set print asm-demangle on" >> ~/.gdbinit\
 
 
 추후 완성된 통합본
-```
+
 # [[카테고리]] 문제 이름 (Level / 난이도)
 
 * **Platform / Source**: [Dreamhack / TryHackMe / HTB / CTF명]
