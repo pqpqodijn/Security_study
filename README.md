@@ -99,4 +99,106 @@ cat flag.txt
 +
 echo "source /opt/pwndbg/gdbinit.py" >> ~/.gdbinit
 echo "set print symbol-filename on" >> ~/.gdbinit
-echo "set print asm-demangle on" >> ~/.gdbinit
+echo "set print asm-demangle on" >> ~/.gdbinit\
+
+
+추후 완성된 통합본
+```
+# [[카테고리]] 문제 이름 (Level / 난이도)
+
+* **Platform / Source**: [Dreamhack / TryHackMe / HTB / CTF명]
+* **Category**: [Forensic / DFIR / Reversing / System / Web / Misc]
+* **Target File / URL**: [파일명 (e.g., memory.raw, sample.exe) / URL]
+
+---
+
+### 1. Target Overview & Environment (대상 환경 및 제약 조건)
+분석 대상의 기본 정보, 파일 구조, 시스템 환경, 보안 제약 조건을 확인합니다.
+
+* **File Info / Arch**: [e.g., Windows 10 x64 Memory Dump / 64-bit ELF / PNG Image]
+* **Protections / Constraints**:
+  * **System / Reversing**: RELRO (Partial/Full) | Canary (Enable/Disable) | NX | PIE
+  * **Forensics / DFIR**: OS (Win10/Linux) | File System (NTFS/EXT4) | 도구 제약
+  * **Web**: WAF 적용 여부 | SQLi/XSS 필터링 키워드
+
+---
+
+### 2. Analysis & Investigation (분석 및 원리 입증)
+정적/동적 분석, 아티팩트 추적, 디컴파일 코드, 패킷 로그 등을 통해 기술적 근거를 입증합니다.
+
+#### 2-1. Static & Structural Analysis (정적/구조 분석)
+```text
+# [예시 1 - Forensics/DFIR] 아티팩트 / CLI 명령어 / 로그
+$ volatility -f memory.raw --profile=Win10x64_19041 pstree
+-> PID 4412 (cmd.exe) 하위로 PID 5104 (powershell.exe) 이상 실행 정황 포착
+
+# [예시 2 - System/Reversing/Web] 소스코드 / 디컴파일 / HTTP Request
+void vuln_func() {
+    char buf[64];
+    read(0, buf, 0x200); // [!] Vulnerability: Buffer Overflow (64bytes < 512bytes)
+}
+```
+
+- **분석 내용**: [구조 분석 결과, 레지스트리/이벤트 로그 경로, 디컴파일 로직 설명]
+- **취약점 / 은닉 원리**: [데이터가 은닉된 위치(LSB, MFT, Alternate Data Stream) 또는 취약점 발생 원인 명시]
+
+#### 2-2. Dynamic Analysis & Trace (동적 분석 및 계산)
+
+Plaintext
+
+```
+# [예시 1 - Offset & Memory Trace]
+buf 위치: RBP - 0x40 (64 bytes) + SFP (8 bytes) -> Target Offset: 72 bytes
+
+# [예시 2 - Decryption & Packet Trace]
+Wireshark Filter: http.request.method == "POST" && ip.addr == 192.168.1.10
+추출 데이터: Base64 Encrypted String -> "S3JjcmV0S2V5MTIz" (Decoded: SecretKey123)
+```
+
+- **추적 및 계산 과정**: [오프셋 계산, 디코딩 방식, 패킷 흐름, 타임라인 재구성 근거 기재]
+
+---
+
+### 3. Solution & Scenario (핵심 풀이 로직 및 시나리오)
+
+#### 3-1. Step-by-Step Scenario
+
+1. **[초기 검증 및 단서 확보]**: [예: Volatility로 메모리 덤프 내 악성 프로세스 PID 확인 및 파일 추출]
+2. **[데이터 추적 및 연계 분석]**: [예: 추출한 파일의 난독화 해제 및 C2 통신 패킷 내 복호화 키 확보]
+3. **[최종 획득 및 행위 입증]**: [예: C2 통신 데이터를 복호화하여 깃발(Flag) 및 유출 데이터 확인]
+
+#### 3-2. Exploit / Command Script (실행 코드 & 명령어)
+
+Python
+
+```
+# [Python 스크립트예시 - Pwntools / Forensics Decrypter / Automate Script]
+from pwn import *
+import base64
+
+# Exploit or Forensic Extraction Logic
+p = remote('host.dreamhack.games', 12345)
+payload = b"A" * 72 + p64(0x40123b)
+p.sendline(payload)
+p.interactive()
+```
+
+Bash
+
+```
+# [CLI 명령어 예시 - Volatility / Steghide / Wireshark / Forensics Tools]
+volatility -f memory.raw --profile=Win10x64_19041 dumpfiles -Q 0x000000007fe1230 -D ./
+steghide extract -sf hidden_image.jpg -p "SecretKey123"
+```
+
+---
+
+### 4. Key Takeaways & Defense Measures (배운 점 및 보안 대책)
+
+- **실수 및 배운 점 (Key Takeaway)**:
+    - [기술적 레슨]: (예시) Volatility 프로필 불일치 시 KDBG 주소를 직접 지정해야 함을 배움.
+    - [실수했던 부분]: (예시) LNK 파일 분석 시 UTC 타임스탬프와 Local Time 간의 시차(9시간) 계산 오류 수정.
+- **보안 대책 및 방어 방안 (Defensive Remediation - BoB 포트폴리오 핵심)**:
+    - **[코드/설정 개선]**: (예시) 입력 크기 제한 적용(`fgets` 사용), 하드코딩된 암호키 제거.
+    - **[로그 및 모니터링 방안]**: (예시) Windows Event ID 4688(프로세스 생성) 모니터링 강화 및 PowerShell Script Block Logging(Event ID 4104) 활성화.
+    - **[탐지 룰 작성]**: (예시) 추출된 악성코드의 YARA Rule / Sigma Rule 패턴 등록.
