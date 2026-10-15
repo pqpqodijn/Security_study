@@ -9,7 +9,7 @@
   ### Q1. 이 기계에 가장 적합한 volatility 프로필은 무엇인가?
       * OS에 관하여 묻는 것이라 windows.info를 사용했는데 원하는 정답은 얻지 못함
         -> 현재 내가 가지고 있는 volatility가 버전 3이라 imageinfo 명령어를 사용 불가능, 그래서 정답(WinXPSP2x86) 확인후 windows.info를 내용들로 최대한 구현해봄.
-      * **OS는 윈도우로 확인** + **Is64Bit False -> 32비트 즉 x86** 
+      * OS는 윈도우로 확인 + Is64Bit False -> 32비트 즉 x86 
         단 SP(service pack)가 2인지 3인지는 확인못함
         
         
