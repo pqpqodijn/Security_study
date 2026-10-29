@@ -20,26 +20,23 @@
 
   ### Q3. What was the DHCP LeaseObtainedTime?
       1. 2번 문제와 경로는 같으면서 바로 옆에 정답이 있음 -> 2016-06-21 12:58:06 (근데 정답이 아님)
-      2.
+      2. 다른 write up을 보니 방법은 같아서 dirty한 상태의 레지스트리를 분석함
+	  	-> 21/06/2016 02:24:12 UTC(아마도 문제 제작자가 dirty한 상태에서 분석하도록 의도한 것 같음)
        
+  ### Q4. What is the computer SID?
+      1. FTK imager에서 쓰레기통에서 보거나 SOFTWARE 레지스트리중 mincrosoft\windows nt\currentversion\profilelist에서 확인 가능함
+        -> S-1-5-21-2489440558-2754304563-710705792(SID랑 PID 구별해야함)
 
-      
-  ### Q4. What is the logical size of the file "strawberry.jpg" in bytes?
-      1. strawberry.jpg : suzy의 폴더에 있는 이미지
-        -> FTK imager에서 Size는 72448이라고 나옴
+  ### Q5. What is the Operating System(OS) version?
+      1. OS란 하드웨어랑 응용 소프트웨어를 관리하는 window, mac os 같은거라 SOFTWARE 레지스트리에서 분석
+	  2. mincrosoft\windows nt\currentversion에서 product name 행에 window 버전이 몇인지 나옴
+        -> 8.1	
 
-  ### Q5. What is the processor architecture of the system? (one word)
-      1. 컴퓨터의 프로세서 구조를 확인해야함 -> SYSTEM 레지스트리 내부에 있을 거임(그러나 자세한 경로는 몰라서 검색해봄)
-      2. Registry exploer도구로 SYSTEM내부에서 controlSet001\Control\SessionManager\Environment(Sessionmanager 부분을 기억못했음)
-        -> PROCESSOR_ARCHITECTURE : amd64
-        
-
-  ### Q6. Which user has a photo of a dog in their recycling bin?
-      1. recycle.bin에서 1005번의 RID를 가진 유저폴더에 있는걸 확인(1000번 이상이면 유저들을 나타냄)
-      2. 1005번이 누구인지 확인할려고 SOFTWARE 레지스트리에 접근
-      3. 근데 자세한 경로는 몰라서 검색해보니 profiles.List에 나와있는걸 확인
-        (mincrosoft\windows nt\currentversion\profiles.list) windows nt에 os와 관련된 설정들 있음
-      -> 1005번은 hansel.apricot
+  ### Q6. What was the computer timezone?
+      1. 컴퓨터 시간 관련된 전체 관리하는데 필요한 정보라 SYSTEM 레지스트리에서 분석
+	  2. controlset001\control\timezoneinformation에서 확인 가능
+	  3. active time(실제 적용 시간)인 행에서 정보 얻음
+	  	-> UTC-07:00
 
   ### Q7. What type of file is "vegetable"? Provide the extension without a dot.
       1. FTK imgaer에서 miriam에게 vegetable파일 확인 및 추출
