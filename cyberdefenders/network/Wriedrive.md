@@ -1,5 +1,4 @@
 
-
 # [endpoint] Wire DIve (medium)
 
 * **Platform / Source**: cyberdefenders
@@ -10,31 +9,51 @@
 
 
   ### Q1. What IP address is requested by the client? (dhcp.pcanpng)
-      1. 
+      1. IP 요청시 진행 순서는 Discover -> Offer -> request -> ACK 로 나뉜다. 이중 요청(Discover)에 응답하여 서버가 주는 Offer 패킷을 살펴봐야함
+	  2. your(client) IP address를 보면 서버가 제공한 IP 주소를 확인할 수 있음.
+	  	-> 192.168.2.244
 
   ### Q2. What is the transaction ID for the DHCP release? (dhcp.pcanpng)
-      1. 
+      1. transaction ID는 응답에 따른 질의들을 구분하기 위한 16비트 식별자임.
+	  2. ctrl + f 로 내용중 release가 있는걸 검색하면 쉽게 확인 가능
+	  	-> 0x9f8fa557
 
   ### Q3. What is the MAC address of the client? (dhcp.pcanpng)
-      1. 
-       
+      1. 1번문제의 관련된 패킷들 내용을 확인하면 Client MAC address 부분에서 정답에 대한 정보를 찾을 수 있음
+       	-> 00:0c:29:82:f5:94
+		
   ### Q4. What is the response for the lookup for flag.fruitinc.xyz? (dns.pcanpng)
-      1.
+      1. flag.fruitinc.xyz에서  TXT에 관해서 찾는 것을 질문(23번 패킷)을 통해 확인
+	  2. 응답 패킷(24번 패킷)에서 Answer의 내용을 자세히 보면 뭐가 적혀있는지 알 수 있음
+	  	-> ACOOLDNSFLAG
 
   ### Q5. Which root server responds to the google.com query? Hostname. (dns.pcanpng)
-      1.  
-
+      1. 1~8번 패킷을 분석해보면 처음에는 루트의 NameServer들을 확인 후 그중 한 곳에 google.com에 관해서 질문해봄
+	  2. 질문한 패킷의 destination이 여러 루트서버중 정답
+	  3. 192.203.230.10을 인터넷에 검색하니 hostname을 확인할 수 임
+	  	-> e.root-servers.net
+	
   ### Q6. What is the path of the file that is opened? (smb.pcanpng)
-      1. 
+      1. 이번 파일에서는 SMB2 protocol이 많아서 검색해보니 네트워크에서 파일이나 프린터 공유(공유폴더 같은)시 사용하는 프로토콜임
+	  2. 패킷을 보면 share(공유폴더)를 열고 정보들을 확인해 원하는 파일 내용을 찾는 것으로 확인됨
+	  3. 마지막에 read명령어가 있던 파일 경로가 답으로 생각됨
+	  	-> HelloWorld\TradeSecrets.txt
 	  
   ### Q7. What was the hex status code when the user SAMBA\jtomato logs in? (smb.pcanpng) 
-      1. 
+      1. 패킷에 log에 대한 문자열로 검색결과 SAMBA\jtomato에 로그인 시도한 패킷을 찾음
+	  2. 실패라고 응답한 패킷에서 NT status를 확인하면 알 수 있음
+	  	-> 0xc000006d
 	  
   ### Q8. What is the tree that is being browsed? (smb.pcanpng)
-      1. 
+      1. smb2로 필터링해 분석하다 보면 Tree에 connect하려는 패킷들이 보임
+	  2. 실패한 패킷 말고 성공해서 share에 접근한 tree가 정답
+	  	-> \\192.168.2.10\public
 
   ### Q9. What is the flag in the file? (smb.pcanpng)
-      1. 
+      1. 읽은 파일(TradeSecrets.txt) 내부에 있을 것으로 추측
+	  2. Read 명령 패킷의 응답들을 복사후 분석(flag를 기준으로 찾으면 빠름)
+	  3. flag<~~>형식으로 적힌 것을 찾음
+	  	-> OneSuperDuperSecret
 
   ### Q10. What port is the shell listening on? (shell.pcanpng)
       1. 
