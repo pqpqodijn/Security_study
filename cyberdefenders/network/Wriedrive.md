@@ -140,16 +140,27 @@
 	  	-> 3
 
   ### Q26. What is the management address of CCNP-LAB-S2? (network.pcanpng)
-      1. 
+      1. cdp로 필터링 후 cisco discovery protocol-> management address에 가면 나옴
+	  	-> 192.168.121.20
 
   ### Q27. What is the interface being reported on in the first SNMP query? (network.pcanpng)
-      1. 
+      1. snmp(simple network managemnet protocol)은 네트워크 상 장비들을 관리하는 프로토콜임
+      2. snmp로 필터링 후 요청과 응답이 짝지어서 여러 있는 것을 확인 및 분석 방법을 인터넷에 찾아봄
+	  3. 각 패킷은 simple network management protocol -> data -> get response -> variable-bindings로 가면 질문들과 그에 대항 응답을 확인할 수 있음
+	  4. 1.3.6.1.2.1.31.1.1.1.().2는 공통이고 ()안 숫자에 따라 질문이 바뀜
+	  	1 -> 인터페이스 이름, 6 -> 수신한 총 바이트, 10 -> 송신한 총 바이트
+	  5. get-response가 적힌 응답 패킷에서 인터페이스 이름 확인함
+	  	-> FA0/1
 	  
   ### Q28. When was the NVRAM config last updated? (network.pcanpng)
-      1. 
+      1. nvram(non volatile random access memory)인데 이걸 어디서 찾는지는 몰라서 힌트를 봄
+	  2. 내부 바이트로 설정 후 nvram키워드를 검색 시 나옴
+	  	-> 2017-03-03 21:02
 	        
   ### Q29. What is the IPv6 of the RADIUS server? (network.pcanpng)
-      1. 
+      1. 28번 문제처럼 radius로 검색하니 "aaa group server radius foobar 및 server name blubb"로 나오고 인터넷에 검색하니 foobar라는 radius 그룹서버를 설정한 후 거기에 blubb 서버를 넣어버린 듯 함 
+	  2. bubble를 패킷 바이트에서 검색하니 "radius server blubb address ipv6 2001:DB8::1812 auth-port 1812 acct-port 1813" 이 문장 발견
+	  	-> 2001:DB8::1812
 
   ### Q30. What has been added to web interaction with web01.fruitinc.xyz? (https.pcanpng)
       1. 
