@@ -94,31 +94,50 @@
 	  	-> 31
 
   ### Q17. What is the IPv6 NTP server IP? (network.pcanpng)
-      1. 
+      1. NTP(network time protocol)로 시간 동기화를 위해 사용하는 프로토콜을 기준으로 필터링함
+	  2. 여러개의 패킷이 나오는데 조건의 IPv6는 2개의 패킷만 있고 여기서 서버 IPv6를 찾으면 됨
+	  	-> 2003:51:6012:110::dcf7:123
         
   ### Q18. What is the first IP address that is requested by the DHCP client? (network.pcanpng)
-      1. 
+      1. DHCP(dynamic host configuration protocol)를 기준으로 필터링해서 검색
+	  2. 시간순으로 볼 때 처음에 request한 IP는 Option: (50) Requested IP Addressd로 확인
+	  	-> 192.168.20.11
 
   ### Q19. What is the first authoritative name server returned for the domain that is being queried? (network.pcanpng)
-       1. 
+       1. 쭉 내려서 분석하거나 DNS를 기준으로 필터링하면 처음으로 blog.webernetz.net에 대해서 standard query한게 보임
+	   	-> ns1.hans.hosteurope.de
 
   ### Q20. What is the number of the first VLAN to have a topology change occur? (network.pcanpng)
-      1. 
+      1. topology change에 대해서 물으니 빈도수가 많은 STP와 관련된 것으로 추측
+	  2. STP를 검색하니 spanning tree protocol로 loop를 방지하는 2계층 모델이라는 것을 확인
+	  3. STP필터링 후 BPDU(bridge protocol data unit) flags 즉 데이터를 주고받는 bridge가 변경되면 이 BPDU flags의 최하위 비트가 1로 바뀜
+	  4. 42번 프레임이 변한 것으로 확인, 여기의 vlan을 찾으면 완료
+	  	-> 20
 
   ### Q21. What is the port for CDP for CCNP-LAB-S2? (network.pcanpng)
-      1. 
+      1. CDP(cisco discovery protocol)은 cisco에서 개발안 2계층 프로토콜임, cdp를 기준으로 필터링
+	  2. 조건의 ccnp-lab-s2는 133프레임에서 처음으로 발견 가능, 여기의 port ID를 확인하면 됨
+	  	-> GigabitEthernet0/2
 				
   ### Q22. What is the MAC address for the root bridge for VLAN 60? (network.pcanpng)
-      1. 
+      1. vlan.id == 60을 조건으로 필터링 후 spanning tree protocol-> root identifier에서 확인할 수 있음(즉 BPDU 내용안에 있음)
+	  	-> 00:21:1b:ae:31:80	
 
   ### Q23. What is the IOS version running on CCNP-LAB-S2? (network.pcanpng)
-      1. 
+      1. 21번 문제처럼 CDP를 기준으로 필터링 후 ccnp-lab-s2를 선택
+	  2. cisco discovery protocol -> Software version -> IOS 적힌거 찾기, version확인 가능
+	  	-> 12.1(22)EA14
 	  
   ### Q24. What is the virtual IP address used for HSRP group 121?	(network.pcanpng)
-      1. 
+      1. HSRP를 검색하니 (hot standard router protocol)로 여러 라우터들이 하나의 라우터처럼 가상의 그룹으로 묶고 송신자 입장에서는 하나의 가상 IP로 보이는 protocol임.
+	  2. HSRP2.group == 121로 필터링 후 virtual IP address 확인
+	  	-> 192.168.121.1
 
   ### Q25. How many router solicitations were sent? (network.pcanpng)
-      1. 
+      1. HSRP에서 solicitations(권유)는 살아있는지 확인을 보내는 것으로 인터넷에서 확인함
+	  2. 이를 구분하는 방법 또한 찾아보니 hsrp for ipv6에서 호스트가 게이트웨이를 찾을 때 icmpv6(Internet control message protocol version 6)를 사용하는 것을 확인
+	  3. icmpv6.type == 133(호스트가 라우터가 누구인지 묻는 조건)으로 검색
+	  	-> 3
 
   ### Q26. What is the management address of CCNP-LAB-S2? (network.pcanpng)
       1. 
