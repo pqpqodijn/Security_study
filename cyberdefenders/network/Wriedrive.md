@@ -163,29 +163,53 @@
 	  	-> 2001:DB8::1812
 
   ### Q30. What has been added to web interaction with web01.fruitinc.xyz? (https.pcanpng)
-      1. 
+      1. web01을 키워드로 검색해보니 정답에 필요한 정보는 확인 못함
+	  2. web01.fruitinc.xyz에 대한 IP address 요청(dns)를 통해 ip를 이용해서 분석해보기로 결정
+	  3. 넓게 분석해보니 tls(transport layer security)를 사용하는 것이 보임
+	  	670번 패킷에서 client가 자신이 사용 가능한 ciper suite(암호화 알고리즘의 세트)을 보냈고 672번 패킷에서 서버가 그중 하나인 ECDHE를 결정(TLS_[이부분이 암호화 알고리즘 종류]_~_~_)
+	  4. 인터넷에 검색해보니 세션 비밀값을 적어둔 키 로그 파일이 필요하다는 것을 확인(SSLKEYLOGFILE) -> 문제 다운받을 때 "secret_sauce.txt"라는 수상한 파일 확인
+	  5. edit -> settings -> protocols -> tls(선택) -> (Pre)-Master-Secret log filename에다가 secret_sauce.txt 넣기 -> 적용
+	  6. 그럼 tls 따라가기 했을때 내용이 안나왔던게 이제는 나옴!!
+	  7. 뭔가 HTTP에 필요 없는 flag : 항목 발견 (flag면 습관적으로 정답으로 생각하게됨..)
+	  	-> y2*Lg4cHe@Ps
 
   ### Q31. What is the name of the photo that is viewed in slack? (https.pcanpng)
-      1. 
+      1. slack이란? -> port 443을 통해 사용하는 매세지 플랫폼
+	  		(port만 443으로 전부 들어오고 각각 해당하는 주소로 들어오는 정보는 문제를 풀면서 인터넷으로 찾음)
+	  2. tcp.port ==443으로 필터링 해 분석했지만 의미있는 결과는 찾지 못함
+	  		(추후 찾아보니 여기로는 사진등 확인 못함, 따른곳으로 사진등이 보내짐)
+	  3. 인터넷에 slack관련 필터를 검색해봄 tls.handshake.extensions_server_name contains "slack" 발견
+	  		(tls handshake중 slack이라는 키워드가 포함된 주소에 접속을 시도한 것들) -> http에서 브라우저가 접속할 주소를 평문으로 보내기 때문
+	  4. imgs적힌 주소로 들어갔지만 별 내용 없음 -> files 적힌 주소로 따라감
+	  5. http에서 get요청으로 jpg 파일 요청하는 것 찾음
+	  	-> get_a_new_phone_today__720.jpg
 
   ### Q32. What is the username and password to login to 192.168.2.1? (https.pcanpng)
-      1. 
+	      1. ip.dst == 192.168.2.1에서 log 키워드로 필터링 -> 881번 패킷에서 login을 만드는 css발견
+		  2. ip.addr == 192.168.2.1에서 log 키워드로 다시 검색 937번 패킷에서 hypertext transfer protocol2 -> html form URL~~ ->에서 이름 및 비밀번호 발견
+		  3. 혹시 몰라 HTTP2따라가기로 전체 내용 보니 post(즉 서버로 데이터 보냄)를 발견 -> username이랑 password를 post로 서버에 넣은 것으로 추측
+		  	-> admin:Ac5R4D9iyqD5bSh
 	  
   ### Q33. What is the certStatus for the certificate with a serial number of 07752cebe5222fcf5c7d2038984c5198? (https.pcanpng)
-      1. 
+      1. 주어진 serial number를 가진 인증서의 인증 상태이기에 serial number를 이용해 검색했더니 160번 패킷에서 발견
+	  	-> good
+			ocsp(onlie certificate status protocol)은 온라인 인증서 상태 프로토콜임
 
   ### Q34. What is the email of someone who needs to change their password? (https.pcanpng)
-      1. 
+      1. password키워드로 검색하면서 email과 관련된 정보를 찾아보니 4758번 패킷에서 발견
+	  	-> jim.tomato@fruitinc.xyz
 	  
   ### Q35. A service is assigned to an interface. What is the interface, and what is the service? (https.pcanpng)
-      1. 
-		
+      1. 도저히 처음부터 어떻게 찾을지 몰라서 힌트를 참고함 -> http2 contains "interface"로 interface가 들어있는 패킷 찾으라고 함
+	  2. 나온 http2 패킷들 따라가기로 내용 분석하니 나옴
+	  	-> lan:ntp
+			(service란 2차 도메인, 즉 오른쪽에서 두번째에 있는 정보)
 
 ### 소감
-1. Jumplist, shellbags와 같은 새로운 컴퓨터 내부 정보들도 새로 알게되는 방면에 outlook, skype, zenmap, bcwipe와 같은 처음 들어보는 어플에 관해 정보를 분석하는 방법을 배우게 되었다. 
-2. 특히 25번 문제를 풀면서 프로그램이 실행한 파일에 대해서 분석하는 사고 과정은 처음이라 생소하고 신기했다.
-3. 처음으로 autopsy를 이용하면서 문제를 푸니 생각보다 레지스트리를 분석하거나 시간이 많이 걸리는 부분들이 간단히 찾아지니 좋았고 이중 분석하기도 용이했다.
-4. 다만 이렇게 문제를 풀면서 인터넷을 참고하며 푸는 비중이 아직 있고 단시간 내에 빨리 풀지 못한다는 점이 아직 많이 공부해야하는 것 같다.			         												 (참고로 2번 풀면서 write up은 2번째로 풀때 작성하는데도 잘 못푸는 문제도 몇개 있었다...)
-5. 계속 문제만 풀다보니 무언가 아는 정보는 많아지지만 전문 지식이 채워지지 않는 것 같아서 디지털 포렌식 전문가 2급 자격증을 병행하며 공부해야겠다. (특히 복학하면 앞으로 배우는 내용과 겹처서 선행겸...)
+1. 간만에 네트워크쪽으로 해서 헷갈리는 부분이 많았음
+2. 따라가기를 통한 분석에 익숙해짐
+3. tls를 보기 위해서는 SSLKEYLOGFILE필요하다는 정보를 배움
+4. 문제를 풀 때 키워드로 검색이 나올 것 같으면 먼저 키워드를 통해 검색하면 문제를 편하게 풀 것 같음
+5. hsrp, transaction ID, ocsp, cdp, stp에 대해서도 새롭게 배움(이전에 "컴퓨터 네트워크 하향식 접근"이라는 책을 통해 배운 것보다 알아야 하는 것이 많은 것을 느낌)
        
 
