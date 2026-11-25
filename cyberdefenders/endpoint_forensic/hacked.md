@@ -50,25 +50,49 @@
 	 	-> Brute-force(무차별 공격)
 
   ### Q7. How many IP addresses are listed in the '/var/log/lastlog' file?
-      1. 
-	  
-  ### Q8. How many users have a login shell?
-      1. 
+      1. 해당 경로를 따라가면 아래와 같은 data가 나옴(lastlog파일은 계정 한개당 마지막 로그인 하나만 기록하는 파일)
+	  		*0	    tty1		            2016-May-04 17:36:39 UTC  (tty = teletypewrite로 서버 앞에서 키보드나 모니터로 직접 로그인)
+			 8	    pts/1	192.168.210.131	2019-Oct-05 11:23:34 UTC  (pts = pesudo-terminal slave로 네트워크를 통해 원격으로 로그인) 
+			 1000	pts/0	192.168.56.101	2016-May-04 17:35:16 UTC
+			 1001	tty1		            2016-May-04 08:41:07 UTC
+	  	-> 2
 
+  ### Q8. How many users have a login shell?
+      1. login "shell"에 관련된 것이니 login과 연관된 etc/passwd파일을 분석하기로 결정
+	  2. data들의 구조는 "사용자이름:password:UID:GID:설명:home directory:로그인 할 때 실행되는 프로그램" 이고 주요로 봐야할 것은 맨 마지막 "로그인 할 때 실행되는 프로그램"이다.
+	  3. 검색해보니 etc/shells에 있는 프로그램들이 여기서 인정하는 login shell이라는 것을 확인. -> /bin/sh, /bin/dash, /bin/bash, /bin/rbash, /usr/bin/tmux, /usr/bin/screen 발견
+	  4. 이에 맞는 개수를 세면 정답이 나옴
+	  	-> 5
+ 
   ### Q9. What is the password of the mail user?
-      1. 
+      1. password는 etc/passwd파일이 아닌 etc/shadow파일에 암호화해서 저장됨.
+	  2. 그러나 이를 디코딩하는 방법을 검색해보니 여기서는 크래킹이라는 방법을 사용해야 하는 것을 발견.
+	  		* 크래킹 : 후보들을 같은 알고리즘으로 해시해서 결과값이 같이 나오는 것을 찾는 방법
+	  3. 이를 위해서는 john프로그램과 rockyou.txt라는 외부에서 만든 자주 사용하는 비밀번호 모음집이 필요하여 ubuntu에서 다운받아서 진행함
+	  		* 또한 passwd와 shadow를 이 순서대로 파일을 합치고(unshadow 사용) txt파일로 만들어서 이용해야함 -> passwd구조에 shadow에 있는 해시된 암호들을 넣는 작업
+	  4. john --wordlist=~/rockyou.txt /mnt/d/71-Hacked/temp_extract_dir/output.txt랑 john --show /mnt/d/71-Hacked/temp_extract_dir/output.txt를 이용해 결과값을 확인
+	  	-> forensics
 
   ### Q10. Which user account was created by the attacker?
-      1.
+      1. 유저가 새로 생성된 것은 추후 로그인하려 사용할 목적으로 추측하여 authlog파일에서 분석을 시도함
+	  2. 아래와 같은 log 발견
+	  		* Oct  5 13:06:38 VulnOSv2 useradd[2525]: new group: name=php, GID=999
+			  Oct  5 13:06:38 VulnOSv2 useradd[2525]: new user: name=php, UID=999, GID=999, home=/usr/php, shell=/bin/bash
+		-> php
         
   ### Q11. How many user groups exist on the machine?
-      1. 
+      1. groups와 관련된 설정은 etc/group에 있음
+	  2. 해당 파일에서 group개수 확인
+	  	-> 58
 
   ### Q12. How many users have sudo access?
-      1. 
+      1. sudo access접근이니 sudo그룹에 포함되어 있을 것으로 추측
+	  2. etc/group 파일에 가서 sudo 그룹에 포함된 users 확인 -> php,mail
+	  	-> 2
       
   ### Q13. What is the home directory of the PHP user?
-      1. 
+      1. etc/passwd에 user의 home directory가 있음
+	  	-> /usr/php
 
   ### Q14. What command did the attacker use to gain root privilege? (Answer contains two spaces).
       1. 
