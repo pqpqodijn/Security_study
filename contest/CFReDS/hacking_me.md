@@ -29,14 +29,14 @@ On 09/20/04 , a Dell CPi notebook computer, serial # VLQLW, was found abandoned 
       1. 2번 문제에서 본 폴더에 install date 정보도 들어있음 -> 1092955707(Unix 변환 필요) -> 08/19/04 10:48:27 PM -> 그러나 시간대가 다름
 	  2. 시간대가 다르니 image는 UTC로부터 얼만큼 변경해야하는지 system 레지스토리에서 controlset001/control/timezoneinformation의 active timebias(실제 적용시간)이 500인 것을 확인
 	  	-> 08/19/04 05:48:27 PM
-			• 왜 standardName이 정답이 아닌가?
-				• activetimebias를 기준으로 
-					ActiveTimeBias == Bias이면 표준시 적용 (standardName)
-					ActiveTimeBias == Bias + DaylightBias이면 서머타임 적용(daylightName)
       
   ### Q4. What is the timezone settings?
       1. 3번 문제에서 얻은 정보들로 풀 수 있음
 	  	-> Central Daylight Time(-5 hours)
+			• 왜 standardName이 정답이 아닌가?
+				• activetimebias를 기준으로 
+					ActiveTimeBias == Bias이면 표준시 적용 (standardName)
+					ActiveTimeBias == Bias + DaylightBias이면 서머타임 적용(daylightName)
 
   ### Q5. Who is the registered owner?
       1. 
