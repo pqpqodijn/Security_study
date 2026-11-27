@@ -10,7 +10,8 @@ On 09/20/04 , a Dell CPi notebook computer, serial # VLQLW, was found abandoned 
  Find any hacking software, evidence of their use, and any data that might have been generated. Attempt to tie the computer to the suspect, G=r=e=g S=c=h=a=r=d=t.
 
  A DD image (in seven parts: 1, 2, 3, 4, 5, 6, 7, 8, and notes) and a EnCase image (second part) of the abandoned computer have already been made.
- -> Greg Schardt의 해킹을 분석해보
+ 
+ -> Greg Schardt의 해킹을 분석하기
 ---
 
 
