@@ -16,16 +16,27 @@ On 09/20/04 , a Dell CPi notebook computer, serial # VLQLW, was found abandoned 
 
 
   ### Q1. What is the image hash? Does the acquisition and verification hash match?
-      1. 
+      1. 나는 Encase image파일을 다운받았기 때문에 CFReDS portal 사이트에 있는 HackingCase_E01_hashes.html(encase image관련 파일)에 적힌 MD5 hash값들과 내가 다운 받은 파일들의 MD5값을 hashcalc 프로그램으로 계산함 -> 일치
+	  2. 혹시 모르니 FTK imager에서 drive/image verify results를 통해서도 hash 확인함 -> 일치
+	  	-> 943243e71eda7481fee7b83f06698993(E01), 4931253cc91dffdef5867c3dfbd99516(E02)
       
   ### Q2. What operating system was used on the computer?
-      1. 
+      1. os에 관해서 물어보는 것이니 root/Windows/system32/config에서 software(registry)파일 추출(log파일들도 같이 있으면 dirty한 상태이니 clean하게 rla로 합쳐줘야함)
+	  2. regisrty explorer로 분석하는데 mincrosoft/windows nt/currentversion에서 확인
+	  	-> Windows XP
 
   ### Q3. When was the install date?
-      1. 
+      1. 2번 문제에서 본 폴더에 install date 정보도 들어있음 -> 1092955707(Unix 변환 필요) -> 08/19/04 10:48:27 PM -> 그러나 시간대가 다름
+	  2. 시간대가 다르니 image는 UTC로부터 얼만큼 변경해야하는지 system 레지스토리에서 controlset001/control/timezoneinformation의 active timebias(실제 적용시간)이 500인 것을 확인
+	  	-> 08/19/04 05:48:27 PM
+			• 왜 standardName이 정답이 아닌가?
+				• activetimebias를 기준으로 
+					ActiveTimeBias == Bias이면 표준시 적용 (standardName)
+					ActiveTimeBias == Bias + DaylightBias이면 서머타임 적용(daylightName)
       
   ### Q4. What is the timezone settings?
-      1. 
+      1. 3번 문제에서 얻은 정보들로 풀 수 있음
+	  	-> Central Daylight Time(-5 hours)
 
   ### Q5. Who is the registered owner?
       1. 
