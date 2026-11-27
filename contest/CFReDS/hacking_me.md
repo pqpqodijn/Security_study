@@ -21,13 +21,13 @@ On 09/20/04 , a Dell CPi notebook computer, serial # VLQLW, was found abandoned 
 	  	-> 943243e71eda7481fee7b83f06698993(E01), 4931253cc91dffdef5867c3dfbd99516(E02)
       
   ### Q2. What operating system was used on the computer?
-      1. os에 관해서 물어보는 것이니 root/Windows/system32/config에서 software(registry)파일 추출(log파일들도 같이 있으면 dirty한 상태이니 clean하게 rla로 합쳐줘야함)
-	  2. regisrty explorer로 분석하는데 mincrosoft/windows nt/currentversion에서 확인
+      1. os에 관해서 물어보는 것이니 root\Windows\system32\config에서 software(registry)파일 추출(log파일들도 같이 있으면 dirty한 상태이니 clean하게 rla로 합쳐줘야함)
+	  2. regisrty explorer로 분석하는데 mincrosoft\windows nt\currentversion에서 확인
 	  	-> Windows XP
 
   ### Q3. When was the install date?
       1. 2번 문제에서 본 폴더에 install date 정보도 들어있음 -> 1092955707(Unix 변환 필요) -> 08/19/04 10:48:27 PM -> 그러나 시간대가 다름
-	  2. 시간대가 다르니 image는 UTC로부터 얼만큼 변경해야하는지 system 레지스토리에서 controlset001/control/timezoneinformation의 active timebias(실제 적용시간)이 500인 것을 확인
+	  2. 시간대가 다르니 image는 UTC로부터 얼만큼 변경해야하는지 system 레지스토리에서 controlset001\control\timezoneinformation의 active timebias(실제 적용시간)이 500인 것을 확인
 	  	-> 08/19/04 05:48:27 PM
       
   ### Q4. What is the timezone settings?
@@ -39,13 +39,27 @@ On 09/20/04 , a Dell CPi notebook computer, serial # VLQLW, was found abandoned 
 					ActiveTimeBias == Bias + DaylightBias이면 서머타임 적용(daylightName)
 
   ### Q5. Who is the registered owner?
-      1. 
+      1. 처음에는 software의 profileList파일에 있는 명단 중 한명이라고 생각해서 가보니 Evil유저 한명 있었음 -> 정답 아님
+	  2. 그래서 인터넷에 registered owner에 대해서 검색해보니 이는 설치할 때 적은 이름표 즉 windows 운영체제에 등록된 소유자에 대해서 물어본 것
+	  		• profileList : 실제로 컴퓨터에 로그인 해서 로그인을 시도하면서 만들어진 프로필 모음
+			• SAM\domains\account\users : 로그인 시도를 하지 않았던 계정들 전부 포함한 list
+	  3. 2번 문제에서 확인했던 파일에 registered owner 칸 살펴보면 됨
+	  	-> Greg Schardt
   
   ### Q6. What is the computer account name?
-      1.
+      1. computer의 자체에 관한 이름을 물어보는 것이니 system registry에서 찾아야함
+	  2. controlset이 001과 002가 있기에 인터넷에 왜 두개가 있는지 검색해봄
+	  		• 이는 컴퓨터가 부팅하기 위해 만들어둔 백업본이고 현재 사용하고 있는건 system\select의 current 값에서 확인 가능함 -> 여기서는 001사용중
+	  3. controlset001\control\computername\computername 파일에 들어가면 확인할 수 있음
+	  	-> N-1A9ODN6ZXK4LQ
 
   ### Q7. What is the primary domain name?
-      1. 
+      1. 처음에는 domain이라길래 DNS에서의 domain을 말하는 것인가 싶었음 -> 아무리 생각해도 뜬금 없어서 인터넷에 검색함
+	  		• 여기서의 domain은 windows의 domain을 말하는 것임 (대학교에서 내 정보가 중앙 서버에 있다고 가정하면 중앙 서버가 domain controler이고 내 학생 정보(domain)로 대학교에 존재라는 컴퓨터들로 로그인이 가능한 것)
+			  또한 대학교 내의 컴퓨터들(중앙 서버의 domain에 가입된 컴퓨터들)은 domain controler에서 모두다 관리 가능하다고 이해하면 됨
+	  2. windows 관련이니 software\mincrosoft\windows nt\currentversion 까지는 생각했지만 그 이후를 모르겠어서 찾아보니 winlogon파일에 있는 것을 확인함
+	  		• defaultusername의 값을 확인하면 됨
+	  	-> Mr. Evil
       
   ### Q8. When was the last recorded computer shutdown date/time?
       1. 
